@@ -43,7 +43,7 @@ export default function ConnectionInput() {
   return (
     <form
       onSubmit={(event) => handleSubmit(event)}
-      className="flex justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md overflow-x-auto mb-3 "
+      className="flex justify-center items-center xl:flex-col bg-slate-200 w-full h-auto p-4 rounded-md shadow-md overflow-x-auto mb-3"
     >
       {/* SSH Server */}
       <label htmlFor="server" className="font-bold">
@@ -58,7 +58,7 @@ export default function ConnectionInput() {
       />
 
       {/* SSH Username */}
-      <label htmlFor="username" className="ml-5 font-bold">
+      <label htmlFor="username" className="ml-5 font-bold xl:mt-2">
         SSH Username
       </label>
       <input
@@ -70,7 +70,7 @@ export default function ConnectionInput() {
       />
 
       {/* SSH Password */}
-      <label htmlFor="password" className="ml-5 font-bold">
+      <label htmlFor="password" className="ml-5 font-bold xl:mt-2">
         SSH Password
       </label>
       <input
@@ -81,7 +81,7 @@ export default function ConnectionInput() {
         onChange={handleChange}
       />
 
-      <button className="ml-5 px-3 py-1 bg-green-400 h-8 rounded-md shadow-md text-white font-bold">
+      <button className="ml-5 px-3 py-1 bg-green-400 h-8 rounded-md shadow-md text-white font-bold xl:mt-2">
         Connect SSH
       </button>
     </form>
