@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { SSH_ServerResponse } from "../api/sshAuth/route";
+import { SSHLoginData } from "../Types/Types";
 
-export interface SSHLoginData {
-  server: string;
-  username: string;
-  password: string;
+interface PropsType {
+  handleSubmit: (
+    event: React.FormEvent<HTMLFormElement>,
+    formData: SSHLoginData
+  ) => void;
 }
 
-export default function ConnectionInput() {
+export default function ConnectionInput(props: PropsType) {
   // Empty form data object
   const emptyFormDataObj: SSHLoginData = {
     server: "",
@@ -29,29 +29,9 @@ export default function ConnectionInput() {
     }));
   };
 
-  // Handle submit on buttonClick
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const res = await fetch("/api/sshAuth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      console.log(await res.json());
-    } catch (error) {
-      console.error(error);
-    }
-
-    // setFormData(emptyFormDataObj);
-  };
-
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(event) => props.handleSubmit(event, formData)}
       className="flex justify-center items-center xl:flex-col bg-slate-200 w-full h-auto p-4 rounded-md shadow-md"
     >
       {/* SSH Server */}
@@ -80,7 +60,7 @@ export default function ConnectionInput() {
 
       {/* SSH Password */}
       <label htmlFor="password" className="ml-5 font-bold xl:mt-2">
-        SSH Key/Password
+        SSH Password
       </label>
       <input
         type="password"

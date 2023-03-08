@@ -1,5 +1,5 @@
+import { SSHLoginData } from "@/app/Types/Types";
 import { NextResponse } from "next/server";
-import { SSHLoginData } from "@/app/Components/ConnectionInput";
 import SSH from "simple-ssh";
 
 export interface SSH_ServerResponse {
