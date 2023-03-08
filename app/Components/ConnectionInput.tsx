@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SSH_ServerResponse } from "../api/sshAuth/route";
 
 export interface SSHLoginData {
   server: string;
@@ -16,8 +17,6 @@ export default function ConnectionInput() {
     username: "",
     password: "",
   };
-
-  const router = useRouter();
 
   const [formData, setFormData] = useState<SSHLoginData>(emptyFormDataObj);
 
@@ -41,11 +40,13 @@ export default function ConnectionInput() {
         },
         body: JSON.stringify(formData),
       });
+
+      console.log(await res.json());
     } catch (error) {
       console.error(error);
     }
 
-    setFormData(emptyFormDataObj);
+    // setFormData(emptyFormDataObj);
   };
 
   return (
@@ -61,7 +62,7 @@ export default function ConnectionInput() {
         type="text"
         name="server"
         id="server"
-        className="ml-3 p-2 h-8 rounded-md shadow-md"
+        className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
         onChange={handleChange}
       />
 
@@ -73,7 +74,7 @@ export default function ConnectionInput() {
         type="text"
         name="username"
         id="username"
-        className="ml-3 p-2 h-8 rounded-md shadow-md"
+        className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
         onChange={handleChange}
       />
 
@@ -82,14 +83,14 @@ export default function ConnectionInput() {
         SSH Key/Password
       </label>
       <input
-        type="text"
+        type="password"
         name="password"
         id="password"
-        className="ml-3 p-2 h-8 rounded-md shadow-md"
+        className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
         onChange={handleChange}
       />
 
-      <button className="ml-5 px-3 py-1 bg-green-400 h-8 rounded-md shadow-md text-white font-bold xl:mt-2">
+      <button className="ml-5 px-3 py-1 bg-green-400 h-8 rounded-md shadow-md text-white font-bold xl:mt-3">
         Connect
       </button>
     </form>

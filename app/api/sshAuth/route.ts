@@ -1,37 +1,53 @@
 import { NextResponse } from "next/server";
 import { SSHLoginData } from "@/app/Components/ConnectionInput";
+import SSH from "simple-ssh";
 
-import * as ssh2 from "ssh2";
+export interface SSH_ServerResponse {
+  output: string;
+  error: string;
+  exitCode: number;
+}
 
 export async function POST(request: Request) {
   const sshLoginData: SSHLoginData = await request.json();
-  createSSHConnection(sshLoginData);
-  return NextResponse.json({ statusCode: 200 });
+  const sshServerResponse = await createSSHConnection(sshLoginData);
+  return NextResponse.json(sshServerResponse);
 }
 
-function createSSHConnection(sshLoginData: SSHLoginData) {
-  console.log(sshLoginData);
+async function createSSHConnection(
+  sshLoginData: SSHLoginData
+): Promise<SSH_ServerResponse> {
+  // Create ssh obj with loginData
+  const ssh = new SSH({
+    host: sshLoginData.server,
+    user: sshLoginData.username,
+    pass: sshLoginData.password,
+  });
 
-  // const config: ssh2.ConnectConfig = {
-  //   host: sshLoginData.server,
-  //   port: 22,
-  //   username: sshLoginData.username,
-  //   password: sshLoginData.password,
-  // };
+  let sshServerResponse: SSH_ServerResponse = {
+    output: "",
+    error: "",
+    exitCode: 0,
+  };
 
-  // // Create a new SSH client
-  // const client = new ssh2.Client();
-
-  // // Connect to the server
-  // client.on("ready", () => {
-  //   console.log("Connected to server");
-  //   // Do something with the SSH connection here
-  // });
-
-  // client.connect(config);
-
-  // // Handle errors
-  // client.on("error", (err) => {
-  //   console.error("Error connecting to server:", err);
-  // });
+  // TODO: Reject doesnt work correct
+  return new Promise((resolve, reject) => {
+    ssh
+      .exec("ls", {
+        out: (stdout: string) => {
+          sshServerResponse.output = stdout;
+        },
+        err: (stderr: string) => {
+          sshServerResponse.error = stderr;
+          console.log(stderr);
+          reject(new Error(stderr)); // reject with the error message
+        },
+        exit: (code: number) => {
+          sshServerResponse.exitCode = code;
+          ssh.end();
+          resolve(sshServerResponse);
+        },
+      })
+      .start();
+  });
 }
