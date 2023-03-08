@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { SSHLoginData } from "@/app/Components/ConnectionInput";
 
 export async function POST(request: Request) {
-  return new Response("Hello, Next.js!");
+  const sshLoginData: SSHLoginData = await request.json();
+  createSSHConnection(sshLoginData);
+  return NextResponse.json({ statusCode: 200 });
 }
 
-export async function GET(request: Request) {
-  console.log(request);
-  return NextResponse.json({ test: "hey" });
+function createSSHConnection(sshLoginData: SSHLoginData) {
+  console.log(sshLoginData);
 }

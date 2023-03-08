@@ -31,19 +31,27 @@ export default function ConnectionInput() {
   };
 
   // Handle submit on buttonClick
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.push(
-      `/api/sshAuth?server=${formData.server}&username=${formData.username}&password=${formData.password}`
-    );
-    console.log(formData);
+    try {
+      const res = await fetch("/api/sshAuth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
     setFormData(emptyFormDataObj);
   };
 
   return (
     <form
-      onSubmit={(event) => handleSubmit(event)}
-      className="flex justify-center items-center xl:flex-col bg-slate-200 w-full h-auto p-4 rounded-md shadow-md overflow-x-auto mb-3"
+      onSubmit={handleSubmit}
+      className="flex justify-center items-center xl:flex-col bg-slate-200 w-full h-auto p-4 rounded-md shadow-md"
     >
       {/* SSH Server */}
       <label htmlFor="server" className="font-bold">
@@ -71,7 +79,7 @@ export default function ConnectionInput() {
 
       {/* SSH Password */}
       <label htmlFor="password" className="ml-5 font-bold xl:mt-2">
-        SSH Password
+        SSH Key/Password
       </label>
       <input
         type="text"
@@ -82,7 +90,7 @@ export default function ConnectionInput() {
       />
 
       <button className="ml-5 px-3 py-1 bg-green-400 h-8 rounded-md shadow-md text-white font-bold xl:mt-2">
-        Connect SSH
+        Connect
       </button>
     </form>
   );
