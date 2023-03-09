@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { SSH_Conversation } from "../Types/Types";
 import Conversation from "./Conversation";
 
-interface Conversation {
-  id: string;
-  client: string;
-  server: string;
-}
-
 export default function CommandLine() {
-  const [conversations, setConversations] = useState<Conversation[]>([
+  const [conversations, setConversations] = useState<SSH_Conversation[]>([
     {
       id: uuid(),
       client: "pwd",
@@ -24,19 +19,24 @@ export default function CommandLine() {
   const [command, setCommand] = useState<string>("");
 
   const sendCommand = async () => {
-    // const res = await fetch("/api/sshCommands", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(command),
-    // });
+    const res = await fetch("/api/sshCommand", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: 0, client: command, server: "" }),
+    });
+
+    setConversations((prevConversations) => [
+      { id: uuid(), client: command, server: "cd" },
+      ...prevConversations,
+    ]);
 
     setCommand("");
   };
 
   return (
-    <div className="flex-col justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md mt-4">
+    <div className="flex-col justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md mt-4 overflow-x-auto">
       <h1 className="font-bold text-sm">Command Line</h1>
       <input
         type="text"

@@ -51,9 +51,11 @@ export default function Home() {
                 </h1>
                 <button
                   onClick={() => setShowCommandLine((prevState) => !prevState)}
-                  className="px-3 py-1 bg-green-400 text-white h-8 rounded-md shadow-md font-bold"
+                  className={`px-3 py-1 bg-green-400 text-white h-8 rounded-md shadow-md font-bold ${
+                    showCommandLine && `bg-red-500`
+                  }`}
                 >
-                  Show Command Line
+                  {showCommandLine ? "Hide Command Line" : "Show Command Line"}
                 </button>
               </div>
               {showCommandLine && <CommandLine />}

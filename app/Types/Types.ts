@@ -11,3 +11,9 @@ export interface SSH_ServerResponse {
 }
 
 export interface Backup {}
+
+export interface SSH_Conversation {
+  id: string;
+  client: string;
+  server: string;
+}

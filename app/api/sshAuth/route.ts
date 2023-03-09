@@ -1,8 +1,7 @@
 import { SSHLoginData, SSH_ServerResponse } from "@/app/Types/Types";
 import { NextResponse } from "next/server";
 import SSH from "simple-ssh";
-
-export let ssh: SSH;
+import { getSSH, initializeSSHConnection } from "@/app/Helpers/SSH";
 
 export async function POST(request: Request) {
   try {
@@ -18,19 +17,14 @@ async function createSSHConnection(
   sshLoginData: SSHLoginData
 ): Promise<SSH_ServerResponse> {
   // Create ssh obj with loginData
-  ssh = new SSH({
-    host: sshLoginData.server,
-    user: sshLoginData.username,
-    pass: sshLoginData.password,
-  });
-
+  await initializeSSHConnection(sshLoginData);
+  const ssh = getSSH();
   let sshServerResponse: SSH_ServerResponse = {
     output: [],
     error: "",
     exitCode: 0,
   };
 
-  // TODO: Reject doesnt work correct
   return new Promise((resolve, reject) => {
     // If an error occurs when connecting to the server, the promise should be rejected
     ssh.on("error", (err: string) => {
