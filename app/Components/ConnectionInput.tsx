@@ -43,6 +43,7 @@ export default function ConnectionInput(props: PropsType) {
         name="server"
         id="server"
         className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
+        value={formData.server}
         onChange={handleChange}
       />
 
@@ -54,6 +55,7 @@ export default function ConnectionInput(props: PropsType) {
         type="text"
         name="username"
         id="username"
+        value={formData.username}
         className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
         onChange={handleChange}
       />
@@ -66,6 +68,7 @@ export default function ConnectionInput(props: PropsType) {
         type="password"
         name="password"
         id="password"
+        value={formData.password}
         className="ml-3 mt-1 p-2 h-8 rounded-md shadow-md"
         onChange={handleChange}
       />

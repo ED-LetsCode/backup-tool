@@ -1,50 +1,55 @@
-import { SSHLoginData } from "@/app/Types/Types";
+import { SSHLoginData, SSH_ServerResponse } from "@/app/Types/Types";
 import { NextResponse } from "next/server";
 import SSH from "simple-ssh";
 
-export interface SSH_ServerResponse {
-  output: string;
-  error: string;
-  exitCode: number;
-}
+export let ssh: SSH;
 
 export async function POST(request: Request) {
-  const sshLoginData: SSHLoginData = await request.json();
-  const sshServerResponse = await createSSHConnection(sshLoginData);
-  return NextResponse.json(sshServerResponse);
+  try {
+    const sshLoginData: SSHLoginData = await request.json();
+    const sshServerResponse = await createSSHConnection(sshLoginData);
+    return NextResponse.json(sshServerResponse);
+  } catch (err: any) {
+    return new NextResponse("Not found", { status: 404 });
+  }
 }
 
 async function createSSHConnection(
   sshLoginData: SSHLoginData
 ): Promise<SSH_ServerResponse> {
   // Create ssh obj with loginData
-  const ssh = new SSH({
+  ssh = new SSH({
     host: sshLoginData.server,
     user: sshLoginData.username,
     pass: sshLoginData.password,
   });
 
   let sshServerResponse: SSH_ServerResponse = {
-    output: "",
+    output: [],
     error: "",
     exitCode: 0,
   };
 
   // TODO: Reject doesnt work correct
   return new Promise((resolve, reject) => {
+    // If an error occurs when connecting to the server, the promise should be rejected
+    ssh.on("error", (err: string) => {
+      ssh.end();
+      reject(err);
+    });
+
+    // Connect to the server and retrieve all necessary data
     ssh
-      .exec("ls", {
+      .exec("whoami", {
         out: (stdout: string) => {
-          sshServerResponse.output = stdout;
+          // Split by every line break
+          sshServerResponse.output = stdout.split("\n");
         },
         err: (stderr: string) => {
           sshServerResponse.error = stderr;
-          console.log(stderr);
-          reject(new Error(stderr)); // reject with the error message
         },
         exit: (code: number) => {
           sshServerResponse.exitCode = code;
-          ssh.end();
           resolve(sshServerResponse);
         },
       })

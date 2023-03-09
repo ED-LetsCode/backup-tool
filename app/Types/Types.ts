@@ -3,3 +3,11 @@ export interface SSHLoginData {
   username: string;
   password: string;
 }
+
+export interface SSH_ServerResponse {
+  output: string[];
+  error: string;
+  exitCode: number;
+}
+
+export interface Backup {}
