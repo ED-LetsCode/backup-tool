@@ -4,6 +4,7 @@ import { SSH_Conversation } from "../Types/Types";
 import Conversation from "./Conversation";
 
 export default function CommandLine() {
+  const [command, setCommand] = useState<string>("");
   const [conversations, setConversations] = useState<SSH_Conversation[]>([
     {
       id: uuid(),
@@ -16,7 +17,6 @@ export default function CommandLine() {
       server: "home/user/",
     },
   ]);
-  const [command, setCommand] = useState<string>("");
 
   const sendCommand = async () => {
     const res = await fetch("/api/sshCommand", {
@@ -36,13 +36,13 @@ export default function CommandLine() {
   };
 
   return (
-    <div className="flex-col justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md mt-4 overflow-x-auto">
+    <div className="flex-col justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md mt-4 overflow-x-auto ">
       <h1 className="font-bold text-sm">Command Line</h1>
       <input
         type="text"
         name="server"
         id="server"
-        className="p-2 h-8 rounded-md shadow-md w-full mt-1"
+        className="p-2 h-10 rounded-md shadow-md w-full mt-1"
         onChange={(event) => setCommand(event.target.value)}
         onKeyDown={(event) => event.key === "Enter" && sendCommand()}
         value={command}

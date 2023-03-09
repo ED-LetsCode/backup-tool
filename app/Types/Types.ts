@@ -5,7 +5,7 @@ export interface SSHLoginData {
 }
 
 export interface SSH_ServerResponse {
-  output: string[];
+  output: string;
   error: string;
   exitCode: number;
 }

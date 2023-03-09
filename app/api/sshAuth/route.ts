@@ -20,7 +20,7 @@ async function createSSHConnection(
   await initializeSSHConnection(sshLoginData);
   const ssh = getSSH();
   let sshServerResponse: SSH_ServerResponse = {
-    output: [],
+    output: "",
     error: "",
     exitCode: 0,
   };
@@ -37,7 +37,7 @@ async function createSSHConnection(
       .exec("whoami", {
         out: (stdout: string) => {
           // Split by every line break
-          sshServerResponse.output = stdout.split("\n");
+          sshServerResponse.output = stdout;
         },
         err: (stderr: string) => {
           sshServerResponse.error = stderr;
