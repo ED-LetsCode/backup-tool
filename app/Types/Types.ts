@@ -17,3 +17,8 @@ export interface SSH_Conversation {
   client: string;
   server: string;
 }
+
+export interface ClientServerCommunication {
+  client: string;
+  server: string;
+}

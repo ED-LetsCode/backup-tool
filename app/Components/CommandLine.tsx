@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { SSH_Conversation } from "../Types/Types";
@@ -9,12 +11,12 @@ export default function CommandLine() {
     {
       id: uuid(),
       client: "pwd",
-      server: "home/user/eb",
+      server: "/",
     },
     {
       id: uuid(),
       client: "pwd",
-      server: "home/user/",
+      server: "home/",
     },
   ]);
 
@@ -24,7 +26,7 @@ export default function CommandLine() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: 0, client: command, server: "" }),
+      body: JSON.stringify({ client: command, server: "" }),
     });
 
     setConversations((prevConversations) => [

@@ -8,7 +8,7 @@ import TitleBar from "./Components/TitleBar";
 import { SSHLoginData, SSH_ServerResponse } from "./Types/Types";
 
 export default function Home() {
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(true);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false);
   const [serverResponse, setServerResponse] = useState<SSH_ServerResponse>();
   const [showCommandLine, setShowCommandLine] = useState<boolean>(false);
 
