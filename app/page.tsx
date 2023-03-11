@@ -5,12 +5,15 @@ import ConnectionInput from "./Components/ConnectionInput";
 import Backup from "./Components/Backup";
 import CommandLine from "./Components/CommandLine";
 import TitleBar from "./Components/TitleBar";
-import { SSHLoginData, SSH_ServerResponse } from "./Types/Types";
+import { SSHLoginData, SSH_Conversation } from "./Types/Types";
+import { httpPost } from "./Helpers/HTTPMethods";
 
 export default function Home() {
   const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false);
-  const [serverResponse, setServerResponse] = useState<SSH_ServerResponse>();
   const [showCommandLine, setShowCommandLine] = useState<boolean>(false);
+  const [sshLoginData, setSSHLoginData] = useState<SSHLoginData>();
+  const [backups, setBackups] = useState<string[]>();
+  const [sshUserName, setSSHUserName] = useState<string>();
 
   // Handle change on showCommandLine Button click
   const handleShowCommandLine = () => {
@@ -23,23 +26,41 @@ export default function Home() {
     formData: SSHLoginData
   ) => {
     event.preventDefault();
+    setSSHLoginData(formData);
 
     try {
-      const res = await fetch("/api/sshAuth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.status === 404) {
+      const response = await httpPost("/api/sshAuth", formData);
+      if (response.status === 404) {
         alert("Can't connect to Server");
         return;
       }
-
-      setServerResponse(await res.json());
+      const { server } = await response.json();
+      setSSHUserName(server);
       setUserIsLoggedIn(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getBackups = async () => {
+    try {
+      const response = await httpPost("/api/sshGetBackups", {
+        pathToBackupFolder: "/www/htdocs/w01dcf56/backups/sdf",
+        sshLoginData,
+      });
+
+      const { sshConversation }: { sshConversation: SSH_Conversation } =
+        await response.json();
+
+      // TODO: Dirty Solution
+      if (sshConversation.server.includes("No such file or directory")) {
+        alert(sshConversation.server);
+        return;
+      }
+
+      // TODO: Show Backups
+
+      console.log(sshConversation.server);
     } catch (err) {
       console.error(err);
     }
@@ -56,7 +77,8 @@ export default function Home() {
               <TitleBar
                 handleShowCommandLine={handleShowCommandLine}
                 showCommandLine={showCommandLine}
-                serverUserName={serverResponse?.output}
+                serverUserName={sshUserName}
+                getBackups={getBackups}
               />
               {showCommandLine && <CommandLine />}
               <Backup />

@@ -39,7 +39,9 @@ export default function CommandLine() {
 
   return (
     <div className="flex-col justify-center items-center bg-slate-200 w-full h-auto p-4 rounded-md shadow-md mt-4 overflow-x-auto ">
-      <h1 className="font-bold text-sm">Command Line</h1>
+      <h1 className="font-bold text-sm">
+        Command Line (Currently not working)
+      </h1>
       <input
         type="text"
         name="server"

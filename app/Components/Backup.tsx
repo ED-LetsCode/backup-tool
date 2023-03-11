@@ -1,3 +1,5 @@
+import { SSHLoginData } from "../Types/Types";
+
 export default function Backup() {
   return (
     <div className="bg-slate-200 h-auto w-full mt-4 rounded-md shadow-md flex justify-around items-center md:flex-col py-4">
