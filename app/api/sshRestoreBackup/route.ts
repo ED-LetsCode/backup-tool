@@ -3,12 +3,9 @@ import { SSHLoginData } from "@/app/Types/Types";
 import { SSHConnection } from "@/app/Helpers/SSHConnection";
 
 interface Req {
+  backupName: string;
   pathToBackupFolder: string;
-  sshLoginData: {
-    server: string;
-    username: string;
-    password: string;
-  };
+  sshLoginData: SSHLoginData;
 }
 
 export async function POST(request: Request) {
@@ -16,7 +13,7 @@ export async function POST(request: Request) {
     const req: Req = await request.json();
 
     const sshConversation = await SSHConnection.sendCommand(
-      `ls ${req.pathToBackupFolder}`,
+      `${req.pathToBackupFolder}/restore.sh ${req.backupName}`,
       req.sshLoginData
     );
     return NextResponse.json({ status: 200, sshConversation: sshConversation });

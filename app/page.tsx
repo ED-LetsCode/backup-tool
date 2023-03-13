@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import ConnectionInput from "./Components/ConnectionInput";
 import Backup from "./Components/Backup";
 import CommandLine from "./Components/CommandLine";
 import TitleBar from "./Components/TitleBar";
 import { SSHLoginData, SSH_Conversation } from "./Types/Types";
 import { httpPost } from "./Helpers/HTTPMethods";
+import { v4 as uuid } from "uuid";
 
 export default function Home() {
   const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false);
@@ -14,10 +15,14 @@ export default function Home() {
   const [sshLoginData, setSSHLoginData] = useState<SSHLoginData>();
   const [backups, setBackups] = useState<string[]>();
   const [sshUserName, setSSHUserName] = useState<string>();
-
+  const [pathToBackupFolder, setPathToBackupFolder] = useState<string>("");
   // Handle change on showCommandLine Button click
   const handleShowCommandLine = () => {
     setShowCommandLine((prevState) => !prevState);
+  };
+
+  const changePathToBackupFolder = (event: ChangeEvent<HTMLInputElement>) => {
+    setPathToBackupFolder(event.target.value);
   };
 
   // Handle submit on buttonClick
@@ -45,7 +50,7 @@ export default function Home() {
   const getBackups = async () => {
     try {
       const response = await httpPost("/api/sshGetBackups", {
-        pathToBackupFolder: "/www/htdocs/w01dcf56/backups/sdf",
+        pathToBackupFolder: pathToBackupFolder,
         sshLoginData,
       });
 
@@ -53,17 +58,49 @@ export default function Home() {
         await response.json();
 
       // TODO: Dirty Solution
-      if (sshConversation.server.includes("No such file or directory")) {
+      if (
+        sshConversation.server.includes("No such file or directory") ||
+        sshConversation.server.includes("cannot access")
+      ) {
         alert(sshConversation.server);
         return;
       }
 
-      // TODO: Show Backups
+      const backupsArr = sshConversation.server
+        .split("\n")
+        .filter((backup) => backup != "")
+        .filter((backup) => backup != "restore.sh")
+        .filter((backup) => backup != "backup.sh");
 
-      console.log(sshConversation.server);
+      setBackups(backupsArr);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const createBackup = async () => {
+    const response = await httpPost("/api/sshCreateBackup", {
+      pathToBackupFolder: pathToBackupFolder,
+      sshLoginData,
+    });
+
+    const { sshConversation }: { sshConversation: SSH_Conversation } =
+      await response.json();
+
+    alert(sshConversation.server);
+  };
+
+  const restoreBackup = async (backupName: string) => {
+    const response = await httpPost("/api/sshRestoreBackup", {
+      backupName: backupName,
+      pathToBackupFolder: pathToBackupFolder,
+      sshLoginData,
+    });
+
+    const { sshConversation }: { sshConversation: SSH_Conversation } =
+      await response.json();
+
+    alert(sshConversation.server);
   };
 
   return (
@@ -79,9 +116,19 @@ export default function Home() {
                 showCommandLine={showCommandLine}
                 serverUserName={sshUserName}
                 getBackups={getBackups}
+                changePathToBackupFolder={changePathToBackupFolder}
+                pathToBackupFolder={pathToBackupFolder}
+                createBackup={createBackup}
               />
               {showCommandLine && <CommandLine />}
-              <Backup />
+              {backups &&
+                backups.map((backup) => (
+                  <Backup
+                    key={uuid()}
+                    backup={backup}
+                    restoreBackup={restoreBackup}
+                  />
+                ))}
             </>
           ) : (
             <ConnectionInput handleSubmit={handleSubmit} />
