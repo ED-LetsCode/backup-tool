@@ -20,7 +20,7 @@ export default function TitleBar({
   createBackup,
 }: TitleBarProps) {
   return (
-    <div className="flex justify-center items-center gap-6 w-full xl:flex-col">
+    <div className="flex justify-center bg-slate-200 rounded-md shadow-md p-4 items-center gap-6 w-full xl:flex-col">
       <h1 className="font-bold">Hello😄👋 "{serverUserName}"</h1>
       <input
         className="px-3 py-1 max-w-[190px] rounded-md shadow-md"

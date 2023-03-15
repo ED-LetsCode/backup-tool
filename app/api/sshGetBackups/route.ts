@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const req: Req = await request.json();
 
     const sshConversation = await SSHConnection.sendCommand(
-      `ls ${req.pathToBackupFolder}`,
+      `ls -t ${req.pathToBackupFolder}`,
       req.sshLoginData
     );
     return NextResponse.json({ status: 200, sshConversation: sshConversation });
