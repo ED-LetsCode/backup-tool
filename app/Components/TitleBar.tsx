@@ -24,7 +24,7 @@ export default function TitleBar({
       <h1 className="font-bold">Hello😄👋 "{serverUserName}"</h1>
       <input
         className="px-3 py-1 max-w-[190px] rounded-md shadow-md"
-        placeholder="Path to Website folder"
+        placeholder="Path to Backup folder"
         onChange={changePathToBackupFolder}
         value={pathToBackupFolder}
       ></input>

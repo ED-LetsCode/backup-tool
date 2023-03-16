@@ -49,7 +49,8 @@ if [ ! -f "$pathToTheBackup" ]; then
     exit 1
 fi
 
-# Delete all files in the Project folder
+# Delete all files in the Project folder | DON'T PUT A SPACE BETWEEN pathToTheProject and the STAR !!! 
+# !!! YOU CAN DELETE THE IMPORTANT FOLDERS ON THE SERVER !!!
 rm -rf "$pathToTheProject"*
 
 # Unzip the backup to the project folder | > /dev/null is to no display the output of unzip
