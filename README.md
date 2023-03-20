@@ -9,10 +9,6 @@ The user interface is fully responsive. If the project is hosted on the internal
 <img src="./img/LoginMobile.PNG" height="500px">
 <img src="./img/HomeMobile.PNG" height="500px">
 <br>
-<br>
-<br>
-
-#
 
 ## How to setup ❓
 
@@ -20,8 +16,6 @@ The user interface is fully responsive. If the project is hosted on the internal
 > 2. Install all dependecies with **"npm install"**
 > 3. Run the Project with **"npm run dev"**
 > 4. Open **"localhost:3000"** in the Browser
-
-#
 
 ## Now you have to configure a few things on the server ⚙️
 
