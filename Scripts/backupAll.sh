@@ -5,7 +5,7 @@
 ####          _______  \\         //                                                                                               ####  
 ####        /.------.\  \|      .'/  ______      Please read the script before executing                                           ####  
 ####       //  ___  \ \ ||/|\  //  _/_----.\__                                                                                     ####  
-####      |/  /.-.\  \ \:|< >|// _/.'..\   '--'  This script only backups the project                                              ####  
+####      |/  /.-.\  \ \:|< >|// _/.'..\   '--'  This script creates a backup of the project and the mySQL Database                ####  
 ####         //   \'. | \'.|.'/ /_/ /  \\                                                                                          ####  
 ####        //     \ \_\/" ' ~\-'.-'    \\                                                                                         ####  
 ####       //       '-._| :H: |'-.__     \\                                                                                        ####  
@@ -17,7 +17,7 @@
 ####                                   ||                                                                                          ####  
 ####                                   \\                                                                                          ####  
 ####                                    '                                                                                          ####  
-####################################################################################################################################### 
+#######################################################################################################################################  
 
 ################# Fill this variables #######################
 # !!!! DON'T FORGET TO ADD THE BACKSLASH AT THE END OF THE PATH !!!!
@@ -37,17 +37,24 @@ maxAmountOfBackups=9
 # false if you want to delete backup
 moveToOldBackupsFolder=true              # <= ONLY true OR false
 
-# If you want to move the backups to another folder when the maximum number of backups is reached, specify the path 
+# If you want to move the backups to another folder when the maximum number of backups is reached, specify the path
 # to the oldBackups folder and fill the variable
 # If you want to delete the oldest Backup you can leave this field empty
 pathToTheOldBackupsFolder=""
 
+##### Enter database credentials #####
+dbUserName=""
+dbPassword=""
+dbName=""
+
 ############################################################
 
 
-
-
-
+# Try to connect to database and if it fails exit the script with an error message
+if ! mysql -u "$dbUserName" -p"$dbPassword" -e "use $dbName" > /dev/null 2>&1; then
+    echo "Db connection failed. Check database credentials"
+    exit 1
+fi
 
 # Count the amount of backups in the backup folder
 amountOfBackups=$(ls "$pathToTheBackupFolder" | wc -l)
@@ -73,11 +80,28 @@ if [ $amountOfBackups -gt $maxAmountOfBackups ]; then
 fi
 
 # Create fileName | looks like this => 2023-03-14-Di-11h-25m-08s-Backup.zip
-fileName=$(date +'%Y-%m-%d-%a-%Hh-%Mm-%Ss-Backup.zip')
+fileName=$(date +'%Y-%m-%d-%a-%Hh-%Mm-%Ss-Backup')
 
-# Cd to the Project create zip and move it to the backup folder | > /dev/null is to no display the output of zip
-cd "$pathToTheProject" && zip -r "$fileName" . > /dev/null && mv "$fileName" "$pathToTheBackupFolder"
+# Create a tmp folder with the db and content folder
+mkdir -p "$pathToTheBackupFolder"tmp/db "$pathToTheBackupFolder"tmp/content
 
+# Copy the project to the tmp/content folder
+cp -r "$pathToTheProject"* "$pathToTheBackupFolder"tmp/content/
+
+# Create a mysql database dump and save it in the tmp/db folder
+mysqldump -u "$dbUserName" -p"$dbPassword" --add-drop-table --disable-keys "$dbName" >  "$pathToTheBackupFolder"tmp/db/"$fileName".sql
+
+# Cd to the tmp folder create zip and move it to the backup folder
+cd "$pathToTheBackupFolder"tmp/
+
+# Zip tmp folder > /dev/null is to not display the output of zip
+zip -r "$fileName.zip" . > /dev/null
+
+# Move the zip file to the backup folder
+mv "$fileName.zip" "$pathToTheBackupFolder"
+
+# Delete the tmp folder
+rm -rf "$pathToTheBackupFolder"tmp
 
 ##### END #####
 echo "Backup was succesfully created"

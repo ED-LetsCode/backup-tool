@@ -14,10 +14,6 @@ The user interface is fully responsive. If the project is hosted on the internal
 
 #
 
-<span style="color:red">**I take no responsibility for any kind of damage on the server. Please be careful you can delete important files/folders and cause big damages on a productive server. ⚠️**</span>
-<br>
-<br>
-
 ## How to setup ❓
 
 > 1. Git clone the Project
@@ -54,32 +50,25 @@ chmod 777 restore.sh && chmod 777 backup.sh
 
 After you have copied the scripts you need to customize them.<br><br>
 
-## Backup.sh ⚙️
-
-Fill the following variables in the **Backup.sh** script:
-
-> 1. pathToTheBackupFolder
-> 2. pathToTheProject
-> 3. maxAmountOfBackups
-
-<span style="color:red">**Don't forget the backslash at the end of the path**</span>
-
-<img src="./img/Backup.png" >
-
 The backup script deletes the oldest backup as soon as the number of maximum backups is exceeded.
 
-#
+# Backup & Restore Script ♻️🛠
 
-## Restore.sh ⚙️
+There are 4 scripts in the Scripts folder.
 
-Fill the following variables in the **Restore.sh** script:
+**_backup.sh & restore.sh_** only backups and restores the project folder.<br>
+**_backupAll.sh & restoreAll.sh_** backups and restores the project folder and the database.
 
-> 1. pathToTheBackupFolder
-> 2. pathToTheProject
+For the mysql database the script was already written for other databases like (mssql, postgres, ...) the script must be adapted. <br>
 
-<span style="color:red">**Don't forget the backslash at the end of the path.**</span>
+> **⚠️❗️ The instructions are in the scripts. Please read the code and adjust the required variables. Make a security backup before the very first time you run it, important data may be deleted if you specify wrong paths.**
 
-<img src="./img/Restore.png" >
+<br>
+
+> **⚠️❗️ I take no responsibility for any kind of damage on the server. Please be careful you can delete important files/folders and cause big damages on a productive server.**
+
+<br>
+
 <br> <br>
 
 # 🔍🚀 How to use the UI Tool
