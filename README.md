@@ -21,6 +21,9 @@ The user interface is fully responsive. If the project is hosted on the internal
 
 I recommend that you create a folder called allBackups. This folder contains the backups of all projects. **Example: allBackups/projectA/**. However, where you store the backups and what the folder is called is up to you.
 
+I recommend this folder structure: <br>
+<img src="./img/FolderStructure.PNG" width="300px"/>
+
 Now you need to copy the following 2 scripts from the Scripts folder to the server.
 
 ```
