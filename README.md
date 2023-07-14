@@ -81,24 +81,4 @@ For the mysql database the script was already written for other databases like (
 <br>
 <br>
 
-# TODO ✔️
 
-The project is not perfect. The following things still need to be implemented.
-
-1. JWT ( JSON Web Token )
-2. Active WebShell ( I had a few problems with the ssh object. Because of this problem I cannot implement an active shell. See below Stackoverflow link )
-
-<br>
-
-# Links 🔗
-
-### Problems with active shell:
-
-https://stackoverflow.com/questions/75696379/how-can-i-use-one-object-through-multiple-api-routes-in-next-js-13-2
-
-<br>
-<br>
-
-# Problems ⁉️
-
-- I can't use the same ssh object for the whole project. For this reason, every time a command is sent to the server, a new SSH connection is established.
